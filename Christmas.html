@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Christmas Wishes from Yue</title>
-  <title>Originally created by Zhengjun</title>
+  <title>Christmas Wishes from Yue (Originally created by Zhengjun) </title>
   <style>
     :root{
       --bg: #07131f;
@@ -298,16 +297,31 @@
   // MUSIC BUTTON
   const bgMusic = document.getElementById("bgMusic");
   const musicBtn = document.getElementById("musicBtn");
-  bgMusic.volume = 0.35;
-  let playing = false;
 
-  musicBtn.onclick = async () => {
-    if(!playing){
-      await bgMusic.play();
-      musicBtn.textContent = "⏸ Pause Christmas Music";
-    }else{
+  bgMusic.volume = 0.35;
+  bgMusic.muted = false;
+
+  let playing = false;
+  let unlocked = false;
+
+  musicBtn.onclick = () => {
+    if (!unlocked) {
+      bgMusic.play().then(() => {
+        unlocked = true;
+        playing = true;
+        musicBtn.textContent = "⏸ Pause Christmas Music";
+      }).catch(() => {
+        alert("Please click once more to allow music playback 🎵");
+      });
+      return;
+    }
+
+    if (playing) {
       bgMusic.pause();
       musicBtn.textContent = "▶ Play Christmas Music";
+    } else {
+      bgMusic.play();
+      musicBtn.textContent = "⏸ Pause Christmas Music";
     }
     playing = !playing;
   };

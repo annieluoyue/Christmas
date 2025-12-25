@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Christmas Wishes from Yue</title>
+  <title>Originally created by Zhengjun</title>
+  <style>
+    :root{
+      --bg: #07131f;
+      --panel: rgba(255,255,255,0.07);
+      --panelBorder: rgba(255,255,255,0.14);
+      --text: #eef5ff;
+      --muted: rgba(238,245,255,0.75);
+
+      --tree1: #0f5a2d;
+      --tree2: #0a3f20;
+      --trunk: #5d4037;
+
+      --red: #e74c3c;
+      --gold: #f1c40f;
+      --ice: #4dd2ff;
+      --mint: #9bffb7;
+    }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: radial-gradient(1200px 800px at 50% 25%, #13324a 0%, var(--bg) 60%, #040a10 100%);
+      color: var(--text);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+    }
+
+    .card{
+      width:min(920px, 92vw);
+      background: var(--panel);
+      border: 1px solid var(--panelBorder);
+      border-radius: 18px;
+      box-shadow: 0 22px 80px rgba(0,0,0,0.55);
+      padding: 22px;
+      text-align:center;
+      backdrop-filter: blur(10px);
+    }
+
+    h1{
+      margin: 8px 0 6px;
+      font-size: clamp(1.6rem, 2.8vw, 2.4rem);
+    }
+
+    .sub{
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    /* TREE */
+    .tree-container{
+      position: relative;
+      width: 360px;
+      height: 520px;
+      margin: auto;
+      filter: drop-shadow(0 18px 55px rgba(0,0,0,0.55));
+    }
+
+    .star{
+      position:absolute;
+      left:50%;
+      top: 6px;
+      transform: translateX(-50%);
+      width: 46px;
+      height: 46px;
+      background: radial-gradient(circle at 35% 30%, #fff3c4 0%, #ffd36a 45%, #caa041 100%);
+      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+      box-shadow: 0 0 18px rgba(255,211,106,0.55);
+      z-index: 20;
+    }
+
+    .layer{
+      position:absolute;
+      left:50%;
+      transform: translateX(-50%);
+      width:0;height:0;
+      border-left:170px solid transparent;
+      border-right:170px solid transparent;
+      border-bottom:220px solid var(--tree1);
+    }
+    .layer::after{
+      content:"";
+      position:absolute;
+      left:-170px;
+      top:18px;
+      border-left:170px solid transparent;
+      border-right:170px solid transparent;
+      border-bottom:220px solid var(--tree2);
+      opacity:0.35;
+    }
+
+    .l1{ top:40px; transform:translateX(-50%) scale(0.82); }
+    .l2{ top:150px; transform:translateX(-50%) scale(0.98); }
+    .l3{ top:280px; transform:translateX(-50%) scale(1.16); }
+
+    .trunk{
+      position:absolute;
+      left:50%;
+      bottom:18px;
+      transform:translateX(-50%);
+      width:90px;
+      height:92px;
+      background: linear-gradient(180deg, #7a4320, var(--trunk));
+      border-radius:14px;
+    }
+
+    .ornament{
+      position:absolute;
+      width:46px;
+      height:46px;
+      border-radius:999px;
+      cursor:pointer;
+      z-index:30;
+      border:1px solid rgba(255,255,255,0.18);
+      box-shadow:0 14px 30px rgba(0,0,0,0.45), inset 0 7px 16px rgba(255,255,255,0.28);
+      transition: transform 160ms ease;
+    }
+    .ornament:hover{ transform: scale(1.08); }
+
+    .light{
+      position:absolute;
+      width:10px;
+      height:10px;
+      border-radius:999px;
+      background: rgba(255,255,255,0.25);
+      opacity:0.25;
+      transition:opacity 250ms ease;
+    }
+    .lights-on .light{
+      opacity:1;
+      background: radial-gradient(circle at 30% 30%, #fff 0%, #ffe4a3 40%, #ffb74a 100%);
+      box-shadow:0 0 16px rgba(255,227,166,0.6);
+      animation: twinkle 1.4s infinite alternate;
+    }
+
+    @keyframes twinkle{
+      from{ transform:scale(0.9); }
+      to{ transform:scale(1.1); }
+    }
+
+    /* CONTROLS */
+    .controls{
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      margin-top:16px;
+      flex-wrap:wrap;
+    }
+
+    button{
+      background: rgba(255,255,255,0.10);
+      color: var(--text);
+      border:1px solid rgba(255,255,255,0.16);
+      padding:10px 14px;
+      border-radius:14px;
+      cursor:pointer;
+      font-weight:700;
+    }
+
+    /* MODAL WISH */
+    .modal{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      background: rgba(0,0,0,0.78);
+      z-index:200;
+    }
+    .modal.open{ display:flex; }
+
+    .wish-card{
+      background: rgba(10,18,26,0.9);
+      border-radius:22px;
+      padding:30px;
+      max-width:860px;
+      width:94vw;
+      text-align:center;
+      animation: fadeIn 260ms ease;
+    }
+
+    @keyframes fadeIn{
+      from{ opacity:0; transform:translateY(12px); }
+      to{ opacity:1; transform:none; }
+    }
+
+    #wishText{
+      font-size:clamp(1.4rem,2.8vw,2.2rem);
+      font-weight:800;
+      color:#ffd166;
+    }
+
+    /* SNOW */
+    .snowflake{
+      position:fixed;
+      top:-12px;
+      color:white;
+      opacity:0.85;
+      animation: fall linear forwards;
+    }
+    @keyframes fall{
+      to{ transform:translateY(110vh); }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="card">
+  <h1>Merry Christmas and Happy New Year</h1>
+  <h1>Zhengjun!</h1>
+  <div class="sub">Click an ornament to reveal a wish</div>
+
+  <div class="tree-container" id="tree">
+    <div class="star"></div>
+    <div class="layer l1"></div>
+    <div class="layer l2"></div>
+    <div class="layer l3"></div>
+    <div class="trunk"></div>
+
+    <div class="ornament" data-idx="0" style="left:150px;top:155px;background:var(--red)"></div>
+    <div class="ornament" data-idx="1" style="left:210px;top:180px;background:var(--gold)"></div>
+    <div class="ornament" data-idx="2" style="left:120px;top:250px;background:var(--ice)"></div>
+    <div class="ornament" data-idx="3" style="left:245px;top:285px;background:var(--mint)"></div>
+    <div class="ornament" data-idx="4" style="left:145px;top:345px;background:var(--red)"></div>
+    <div class="ornament" data-idx="5" style="left:220px;top:372px;background:var(--gold)"></div>
+
+    <div class="light" style="left:170px;top:140px"></div>
+    <div class="light" style="left:210px;top:155px"></div>
+    <div class="light" style="left:140px;top:210px"></div>
+    <div class="light" style="left:245px;top:225px"></div>
+  </div>
+
+  <div class="controls">
+    <button id="toggleLightsBtn">Toggle Tree Lights</button>
+    <button id="musicBtn">▶ Play Christmas Music</button>
+  </div>
+
+    <div class="footer-note">Best wishes from Yue :).</div>
+  </div>
+</div>
+
+<!-- WISH MODAL -->
+<div class="modal" id="modal">
+  <div class="wish-card">
+    <p id="wishText"></p>
+    <div style="margin-top:22px">
+      <button onclick="closeWish()">Back to the tree</button>
+    </div>
+  </div>
+</div>
+
+<!-- ONLINE CHRISTMAS MUSIC -->
+<audio id="bgMusic" loop>
+  <source src="/Users/annieluo/Downloads/Christmas.mp3">
+</audio>
+
+<script>
+  const wishes = [
+    "Merry Christmas! I’m really grateful for your kindness and support.",
+    "You’re such an inspiring person — strong, thoughtful, and truly wonderful.",
+    "I hope this holiday season gives you rest, warmth, and happiness.",
+    "Please remember how capable and amazing you are — you’re doing an incredible job.",
+    "Wishing you a peaceful Christmas and a new year full of good things."
+    "You are truly amazing, and your strength and warmth inspire people around you."
+  ];
+
+  const modal = document.getElementById("modal");
+  const wishText = document.getElementById("wishText");
+  const tree = document.getElementById("tree");
+
+  document.querySelectorAll(".ornament").forEach(o => {
+    o.addEventListener("click", () => {
+      wishText.textContent = wishes[o.dataset.idx];
+      modal.classList.add("open");
+    });
+  });
+
+  function closeWish(){ modal.classList.remove("open"); }
+
+  modal.addEventListener("click", e => { if(e.target === modal) closeWish(); });
+
+  let lightsOn = false;
+  document.getElementById("toggleLightsBtn").onclick = () => {
+    lightsOn = !lightsOn;
+    tree.classList.toggle("lights-on", lightsOn);
+  };
+
+  // MUSIC BUTTON
+  const bgMusic = document.getElementById("bgMusic");
+  const musicBtn = document.getElementById("musicBtn");
+  bgMusic.volume = 0.35;
+  let playing = false;
+
+  musicBtn.onclick = async () => {
+    if(!playing){
+      await bgMusic.play();
+      musicBtn.textContent = "⏸ Pause Christmas Music";
+    }else{
+      bgMusic.pause();
+      musicBtn.textContent = "▶ Play Christmas Music";
+    }
+    playing = !playing;
+  };
+
+  // Snow
+  setInterval(() => {
+    const s = document.createElement("div");
+    s.className = "snowflake";
+    s.innerHTML = "❄";
+    s.style.left = Math.random()*100 + "vw";
+    s.style.fontSize = (Math.random()*10+10)+"px";
+    s.style.animationDuration = (Math.random()*3+4)+"s";
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(),8000);
+  },200);
+</script>
+
+</body>
+</html>
+

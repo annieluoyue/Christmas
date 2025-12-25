@@ -258,10 +258,11 @@
   </div>
 </div>
 
-<!-- ONLINE CHRISTMAS MUSIC -->
-<audio id="bgMusic" preload="auto" playsinline muted>
+<!-- MUSIC -->
+<audio id="bgMusic" preload="none" playsinline>
   <source src="Christmas.mp3" type="audio/mpeg">
 </audio>
+
 
 <script>
   const wishes = [
@@ -295,36 +296,22 @@
   };
 
   // MUSIC BUTTON
-  const bgMusic = document.getElementById("bgMusic");
-  const musicBtn = document.getElementById("musicBtn");
+const bgMusic = document.getElementById("bgMusic");
+const musicBtn = document.getElementById("musicBtn");
 
-  bgMusic.volume = 0.35;
-  bgMusic.muted = false;
+bgMusic.volume = 0.35;
+let playing = false;
 
-  let playing = false;
-  let unlocked = false;
-
-  musicBtn.onclick = () => {
-    if (!unlocked) {
-      bgMusic.play().then(() => {
-        unlocked = true;
-        playing = true;
-        musicBtn.textContent = "⏸ Pause Christmas Music";
-      }).catch(() => {
-        alert("Please click once more to allow music playback 🎵");
-      });
-      return;
-    }
-
-    if (playing) {
-      bgMusic.pause();
-      musicBtn.textContent = "▶ Play Christmas Music";
-    } else {
-      bgMusic.play();
-      musicBtn.textContent = "⏸ Pause Christmas Music";
-    }
-    playing = !playing;
-  };
+musicBtn.addEventListener("click", () => {
+  if (!playing) {
+    bgMusic.play();   // ← 这一次点击就是“合法用户手势”
+    musicBtn.textContent = "⏸ Pause Christmas Music";
+  } else {
+    bgMusic.pause();
+    musicBtn.textContent = "▶ Play Christmas Music";
+  }
+  playing = !playing;
+});
 
   // Snow
   setInterval(() => {
